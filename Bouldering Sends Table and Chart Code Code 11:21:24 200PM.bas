@@ -1,4 +1,4 @@
-Attribute VB_Name = "Module4"
+Attribute VB_Name = "Module3"
 Sub Delete_Tables_Graph()
     Set output = ThisWorkbook.Worksheets("Sort")
     
