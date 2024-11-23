@@ -1,36 +1,29 @@
 \documentclass[11pt, oneside]{article}    % Standard article class, use "amsart" for AMSLaTeX format
 \usepackage{geometry}                      % Layout management
-\geometry{letterpaper}                     % Use letter size paper
-%\geometry{landscape}                      % Use landscape layout if necessary
+\geometry{letterpaper}                     % Use letter size paper               % Use landscape layout if necessary
 \usepackage{graphicx}                      % Graphics support (only needed if you're including images)
 \usepackage{amssymb}                       % Symbol support (only needed if you're using special symbols)
 \usepackage{titlesec}                      % Custom section and title formatting
 \usepackage{parskip}                       % Paragraph spacing instead of indentation
 \usepackage{enumitem}
-% Custom section formatting
 \titleformat{\section}[hang]{\large\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}[runin]{\bfseries}{\thesubsection}{1em}{}
-
-% Title, author, and date setup
-\title{\huge\textbf{Projects}}
+%\title{\huge\textbf{Projects}}
 \author{Joseph Nihill}
 \date{\today}
-
 \begin{document}
-
-\maketitle  % Creates title
-
+%\maketitle  % Creates title
 \begin{center}
+    {\huge \bfseries Projects}
+    
     {\large \bfseries Personal VBA/Macro Coding Project (Fall 2024)}
 \end{center}
 \vspace{3pt}
 \textbf{Efficient Sorting, Filtering, and Organiation of Climbing Data using VBA Code}
-
 \noindent
 In this project, I utilized popular sorting algorithms, such as MergeSort, in Excel VBA to efficiently sort and filter climbing data. I created advanced sorting and filtering mechanisms that go beyond Excel’s built-in tables and filters, enabling more effective data presentation. Additionally, I implemented cleaning functions and applied various strategies to showcase my VBA skills.
 
 Below is a list of the files involved in the project:
-
 \begin{itemize}[label=\textbullet, font=\normalfont]
     \item \textbf{Outdoor Boulder Sends Presentable File.xlsm} - Main spreadsheet for organizing and presenting climbing data, showcasing advanced sorting and filtering methods.
     \item \textbf{Sorting Project; Pivot Chart and Table Code.bas} - Contains VBA code for generating pivot charts and tables to visually represent the sorted climbing data.
@@ -39,7 +32,7 @@ Below is a list of the files involved in the project:
     \item \textbf{modified\_mergesort.py} - Python script for implementing a modified version of MergeSort, which is used for sorting climbing data more effectively.
     \item \textbf{mergesort.py} - Python script for implementing the basic MergeSort algorithm, providing an alternative sorting method for climbing data.
 \end{itemize}
-\vspace{30pt}
+\vspace{10pt}
 \begin{center}
     {\large \bfseries New York Times Coding Project(Spring 2023)}
 \end{center}
