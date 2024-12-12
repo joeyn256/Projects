@@ -85,6 +85,8 @@ Sub custom_Grade(v_Start As String, v_End As String, Optional c_list As Variant)
     'output filtered list
     output.Range("A" & startRow).Resize(UBound(temp_Var), numCol).value = temp_Var
     custom_Sorted = temp_Var
+    'add borders
+    Call borders
 
 End Sub
 Sub ascend()
@@ -1245,6 +1247,8 @@ Sub custom_Date_sort(start_Str As String, end_Str As String, Optional c_list As 
         'output filtered list
         output.Range("A" & startRow).Resize(UBound(temp_Var), numCol).value = temp_Var
         custom_Sorted = temp_Var
+        'add borders
+        Call borders
         MsgBox ("Displaying data from: " & start_Date & " to " & end_Date)
         
     End If
@@ -1395,4 +1399,6 @@ Sub custom_Location_Sort(loc As String, Optional c_list As Variant)
     'output filtered list
     output.Range("A" & startRow).Resize(UBound(temp_Var), numCol).value = temp_Var
     custom_Sorted = temp_Var
+    'add borders
+    Call borders
 End Sub

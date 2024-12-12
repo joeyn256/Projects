@@ -10,11 +10,10 @@ Public startRow As Long ' flexible startRow of data
 
 Public data_ws As Worksheet ' reference to which worksheet we pull from either "Send Data" or "Project Data"
 Public output As Worksheet ' for reference when we use the tab "Sort"
-Sub custom_Grade(v_Start As String, v_End As String, Optional c_list As Variant)
+Sub custom_Grade(v_Start As String, v_End As String)
     Dim current_List As Variant
-    If Not IsMissing(c_list) Then
-        current_List = c_list
-    ElseIf Not IsEmpty(emoji_Sorted) Then
+    
+     If Not IsEmpty(emoji_Sorted) Then
         current_List = emoji_Sorted
     ElseIf Not IsEmpty(var_Sorted) Then
          current_List = var_Sorted
@@ -83,19 +82,20 @@ Sub custom_Grade(v_Start As String, v_End As String, Optional c_list As Variant)
     'remove prior contents
     output.Rows(startRow & ":" & output.Rows.Count).ClearContents
     'output filtered list
-    output.Range("A" & startRow).Resize(UBound(temp_Var), numCol).value = temp_Var
+    output.Range("A" & startRow).Resize(UBound(temp_Var), numCol).Value = temp_Var
     custom_Sorted = temp_Var
 
+    Call borders
 End Sub
 Sub ascend()
     If Not IsEmpty(custom_Sorted) Then
-        output.Range("A" & startRow).Resize(UBound(custom_Sorted, 1), numCol).value = custom_Sorted
+        output.Range("A" & startRow).Resize(UBound(custom_Sorted, 1), numCol).Value = custom_Sorted
         Exit Sub
     ElseIf Not IsEmpty(emoji_Sorted) Then
-        output.Range("A" & startRow).Resize(UBound(emoji_Sorted, 1), numCol).value = emoji_Sorted
+        output.Range("A" & startRow).Resize(UBound(emoji_Sorted, 1), numCol).Value = emoji_Sorted
         Exit Sub
     ElseIf Not IsEmpty(var_Sorted) Then
-        output.Range("A" & startRow).Resize(UBound(var_Sorted, 1), numCol).value = var_Sorted
+        output.Range("A" & startRow).Resize(UBound(var_Sorted, 1), numCol).Value = var_Sorted
         Exit Sub
     Else
         MsgBox ("Sort first by 'V-grade', 'Date', or 'Location'")
@@ -105,17 +105,17 @@ Sub descend()
     Dim flipped_List As Variant
     If Not IsEmpty(custom_Sorted) Then
         flipped_List = FlipArray(custom_Sorted)
-        output.Range("A" & startRow).Resize(UBound(flipped_List, 1), numCol).value = flipped_List
+        output.Range("A" & startRow).Resize(UBound(flipped_List, 1), numCol).Value = flipped_List
         Exit Sub
      ElseIf Not IsEmpty(emoji_Sorted) Then
         ' flip list
         flipped_List = FlipArray(emoji_Sorted)
         ' output list
-        output.Range("A" & startRow).Resize(UBound(flipped_List, 1), numCol).value = flipped_List
+        output.Range("A" & startRow).Resize(UBound(flipped_List, 1), numCol).Value = flipped_List
         Exit Sub
     ElseIf Not IsEmpty(var_Sorted) Then
         flipped_List = FlipArray(var_Sorted)
-        output.Range("A" & startRow).Resize(UBound(flipped_List, 1), numCol).value = flipped_List
+        output.Range("A" & startRow).Resize(UBound(flipped_List, 1), numCol).Value = flipped_List
         Exit Sub
     Else
         MsgBox ("Sort first by V-grade or Date")
@@ -191,7 +191,7 @@ Sub Project_Sort()
 
     ' Clear previous data and write filtered data to the worksheet
     output.Rows(startRow & ":" & output.Rows.Count).ClearContents
-    output.Range("A" & startRow).Resize(UBound(dataList, 1), numCol).value = dataList
+    output.Range("A" & startRow).Resize(UBound(dataList, 1), numCol).Value = dataList
     
     emoji_Sorted = RemoveBlanks(dataList) 'store the most recent affected list here
     
@@ -237,7 +237,7 @@ Sub OS_F_OneS_Sort(emoji As String)
     
         ' Clear previous data and write filtered data to the worksheet
         output.Rows(startRow & ":" & output.Rows.Count).ClearContents
-        output.Range("A" & startRow).Resize(UBound(dataList, 1), numCol).value = dataList
+        output.Range("A" & startRow).Resize(UBound(dataList, 1), numCol).Value = dataList
         
         emoji_Sorted = RemoveBlanks(dataList) 'store the most recent affected list here
     
@@ -348,9 +348,9 @@ Sub mergeSort_By_Date()
     'output.Range("A3").Resize(lastRow, numCol).value = sortedList
     
     'to not have the blank values
-    output.Range("A" & startRow).Resize(lastRow - blankCount, numCol).value = sortedList
+    output.Range("A" & startRow).Resize(lastRow - blankCount, numCol).Value = sortedList
     
-    var_Sorted = output.Range("A" & startRow).Resize(lastRow - blankCount, numCol).value ' store the value without blanks back to ascend and descend
+    var_Sorted = output.Range("A" & startRow).Resize(lastRow - blankCount, numCol).Value ' store the value without blanks back to ascend and descend
     
 End Sub
 Function RecursiveMerge(lists As Collection, left As Long, right As Long) As Variant
@@ -502,7 +502,7 @@ Sub sort_By_Rows()
     Next i
     
     ' Write the entire array to the worksheet at once, starting from A3
-    output.Range("A" & startRow).Resize(rowCount, numCol).value = sort_By_V_Grade
+    output.Range("A" & startRow).Resize(rowCount, numCol).Value = sort_By_V_Grade
     
     var_Sorted = RemoveBlanks(sort_By_V_Grade)
     
@@ -609,7 +609,6 @@ Function climbData() As Collection
     startRow = 5 'This a public variable where we are starting on the 5th row
     var_Then_Sorted = Empty 'reset so if this is run (when making sort by date or sort by V-Grade)
     emoji_Sorted = Empty
-    custom_Sorted = Empty
     'so that ascend/descend sorting works properly
     Set output = ThisWorkbook.Worksheets("Sort")
     Dim current_ws As String
@@ -643,20 +642,20 @@ Function climbData() As Collection
         ' loop through rows until 7 arrays are added to the collection
         Do While i < 8
             ' check if column k has a "V" grade
-            If data_ws.Cells(currentRow, k).value Like "*V*" Then
+            If data_ws.Cells(currentRow, k).Value Like "*V*" Then
                 ' if V is found and it is not the start value then add it to the array
                 If currentRow > 4 Then
                     ' define the range say B2:D6
                     Set dataRange = data_ws.Range(data_ws.Cells(currentGradePos.Row, k + 1), data_ws.Cells(t_data, numCol + k - 1))
                 
                     ' load the range data directly into a temporary array
-                    temparray = dataRange.value
+                    temparray = dataRange.Value
                     
                     ' set the right size for gradeData
                     ReDim gradeData(1 To t_data + 1 - currentGradePos.Row, 1 To numCol)
                     ' set the fixed value for the first column (say 1 to 5, 1)
                     For j = 1 To t_data + 1 - currentGradePos.Row
-                        gradeData(j, 1) = currentGradePos.value
+                        gradeData(j, 1) = currentGradePos.Value
                     Next j
                 
                     ' copy the range data (B2:D6) into the rest of the array (1 to {amount of rows with data}, 2 to {numcol})
@@ -676,7 +675,7 @@ Function climbData() As Collection
                     i = i + 1 ' increment the loop
                 End If
            ' if v is not found, check if there's data in columns B
-            ElseIf data_ws.Cells(currentRow, k + 1).value <> "" Then
+            ElseIf data_ws.Cells(currentRow, k + 1).Value <> "" Then
                 t_data = t_data + 1
             End If
                 
@@ -862,7 +861,7 @@ Function loc_Sort_Output(reorderedLists As Collection)
     Next i
     
     ' Write the entire array to the worksheet at once, starting from A3
-    output.Range("A" & startRow).Resize(rowCount, numCol).value = sort_By_Loc
+    output.Range("A" & startRow).Resize(rowCount, numCol).Value = sort_By_Loc
     
     var_Sorted = RemoveBlanks(sort_By_Loc)
     
@@ -997,34 +996,30 @@ Function ExtractEndNumber(Grade As String) As Integer
         ExtractEndNumber = 0
     End If
 End Function
-Sub addDataValidation(loc1 As String, loc2 As String)
+Sub addDataValidation()
     Dim GradeList As String
-    Set output = ActiveWorkbook.Sheets("sort")
     
     GradeList = "4c/V0,5a/V1,5b/V1,5c/V2,6a/V3,6a+/V3," & _
                 "6b/V4,6b+/V4,6c/V5,6c+/V5,7a/V6,7a+/V7," & _
                 "7b/V8,7b+/V8,7c/V9,7c+/V10,8a/V11,8a+/V12," & _
                 "8b/V13,8b+/V14,8c/V15"
-    ' make f3 empty
-    output.Range(loc1).value = ""
+    
     ' Add data validation to a specific cell
-    With output.Range(loc1).Validation
+    With output.Range("F3").Validation
         .Delete ' Remove existing validation
         .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:=GradeList
         .IgnoreBlank = True
         .InCellDropdown = True
     End With
     
-    ' make f4 empty
-    output.Range(loc2).value = ""
-    With output.Range(loc2).Validation
+    With output.Range("F4").Validation
         .Delete ' Remove existing validation
         .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:=GradeList
         .IgnoreBlank = True
         .InCellDropdown = True
     End With
     
-    MsgBox ("Please select Start and End V-Grade in cells : " & loc1 & " & " & loc2)
+    MsgBox "Please select start and end V-Grade from cell F3 & F4"
 End Sub
 Function ValidGrade(Grade As String) As Boolean
     Dim ValidGrades As Variant
@@ -1048,351 +1043,3 @@ Function ValidGrade(Grade As String) As Boolean
     Next i
     
 End Function
-Sub addDataValidation_Dates(loc1 As String, loc2 As String)
-    Dim start_List As String
-    Dim end_List As String
-    Set output = ActiveWorkbook.Sheets("sort")
-    
-    start_List = "Custom Date,10 Years,3 Years,Last Year,This Year,6 Months,3 Months," & _
-    "Last Month,This Month,Last Week,This Week,Last 3 Days,Yesterday,Today"
-    
-    end_List = "Custom Date,Today,Yesterday,Last 3 Days,This Week,Last Week," & _
-    "This Month,Last Month,3 Months,6 Months,This Year,Last Year,3 Years"
-    
-    ' make F3 empty
-     output.Range(loc1).value = ""
-    ' Add data validation to a specific cell
-    With output.Range(loc1).Validation
-        .Delete ' Remove existing validation
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:=start_List
-        .IgnoreBlank = True
-        .InCellDropdown = True
-    End With
-    
-    ' set automatic value to today
-    output.Range(loc2).value = "Today"
-    
-    With output.Range(loc2).Validation
-        .Delete ' Remove existing validation
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:=end_List
-        .IgnoreBlank = True
-        .InCellDropdown = True
-    End With
-    
-    MsgBox ("Please select Start and End Dates in cells: " & loc1 & " & " & loc2)
-End Sub
-Function validDate(date1 As String) As Boolean
-    Dim ValidDates As Variant
-    
-    validDate = False
-    
-    Dim i As Integer
-    
-    ' List of valid grades
-    ValidDates = Array("Custom Date", "10 Years", "3 Years", "Last Year", "This Year", "6 Months", "3 Months", _
-    "Last Month", "This Month", "Last Week", "This Week", "Last 3 Days", "Yesterday", "Today")
-    
-    ' Validate the input
-    For i = LBound(ValidDates) To UBound(ValidDates)
-        If date1 = ValidDates(i) Then
-            validDate = True
-            Exit For
-        End If
-    Next i
-    
-End Function
-Sub custom_Date_sort(start_Str As String, end_Str As String, Optional c_list As Variant)
-    ' dates we will use in filter
-    Dim start_Date As Date
-    Dim end_Date As Date
-    
-    'set current date
-    Dim today As Date
-    today = Date ' Current Date
-    
-    If start_Str = "Custom Date" Then
-        ' ask for user input for a valid date
-        start_Date = GetValidDate
-        If start_Date = 0 Then
-            Exit Sub
-        End If
-    ElseIf start_Str = "10 Years" Then
-        ' first of 10 years
-        start_Date = DateSerial(Year(today) - 9, 1, 1)
-    ElseIf start_Str = "3 Years" Then
-        ' first of 3 years
-        start_Date = DateSerial(Year(today) - 2, 1, 1)
-    ElseIf start_Str = "Last Year" Then
-        ' first of last year
-        start_Date = DateSerial(Year(today) - 1, 1, 1)
-    ElseIf start_Str = "This Year" Then
-        ' first of this year
-        start_Date = DateSerial(Year(today), 1, 1)
-    ElseIf start_Str = "6 Months" Then
-        'first of 6 months
-        start_Date = DateSerial(Year(today), Month(today) - 5, 1)
-    ElseIf start_Str = "3 Months" Then
-        ' first of 3 months
-        start_Date = DateSerial(Year(today), Month(today) - 2, 1)
-    ElseIf start_Str = "Last Month" Then
-        ' first of last month
-        start_Date = DateSerial(Year(today), Month(today) - 1, 1)
-    ElseIf start_Str = "This Month" Then
-        ' first of this month
-        start_Date = DateSerial(Year(today), Month(today), 1)
-    ElseIf start_Str = "Last Week" Then
-        ' first of last week
-        start_Date = today - Weekday(today, vbMonday) - 6
-    ElseIf start_Str = "This Week" Then
-        ' first of week
-        start_Date = today - Weekday(today, vbMonday) + 1
-    ElseIf start_Str = "Last 3 Days" Then
-        ' start 3 days ago
-        start_Date = today - 2
-    ElseIf start_Str = "Yesterday" Then
-        ' start yesterday
-        start_Date = today - 1
-    ElseIf start_Str = "Today" Then
-        ' today
-        start_Date = today
-    End If
-    
-    ' END STR
-     If end_Str = "Custom Date" Then
-        ' Handle custom date logic here
-        end_Date = GetValidDate
-        If end_Date = 0 Then
-            Exit Sub
-        End If
-
-    ElseIf end_Str = "3 Years" Then
-        ' end of 3 years
-        end_Date = DateSerial(Year(today) - 2, 1, 1) - 1
-    ElseIf end_Str = "Last Year" Then
-        ' end of last year
-        end_Date = DateSerial(Year(today) - 1, 1, 1) - 1
-    ElseIf end_Str = "This Year" Then
-        ' end of this year
-        end_Date = DateSerial(Year(today), 1, 1) - 1
-    ElseIf end_Str = "6 Months" Then
-        'end of 6 months
-        end_Date = DateSerial(Year(today), Month(today) - 5, 1) - 1
-    ElseIf end_Str = "3 Months" Then
-        ' end of 3 months
-        end_Date = DateSerial(Year(today), Month(today) - 2, 1) - 1
-    ElseIf end_Str = "Last Month" Then
-        ' end of last month
-        end_Date = DateSerial(Year(today), Month(today) - 1, 1) - 1
-    ElseIf end_Str = "This Month" Then
-        ' end of this month
-        end_Date = DateSerial(Year(today), Month(today), 1) - 1
-    ElseIf end_Str = "Last Week" Then
-        ' end of last week
-        end_Date = today - Weekday(today, vbMonday) - 7
-    ElseIf end_Str = "This Week" Then
-        ' end of week
-        end_Date = today - Weekday(today, vbMonday)
-    ElseIf end_Str = "Last 3 Days" Then
-        ' 3 days ago
-        end_Date = today - 2
-    ElseIf end_Str = "Yesterday" Then
-        ' yesterday
-        end_Date = today - 1
-    ElseIf end_Str = "Today" Then
-        ' today
-        end_Date = today
-    End If
-    
-    If start_Date > end_Date Then
-        MsgBox ("Start Date is after End Date, no sort was performed")
-        Exit Sub
-    Else
-        Dim current_List As Variant
-        ' set current list of recently activated list
-        If Not IsMissing(c_list) Then
-            current_List = c_list
-        ElseIf Not IsEmpty(emoji_Sorted) Then
-            current_List = emoji_Sorted
-        ElseIf Not IsEmpty(var_Sorted) Then
-             current_List = var_Sorted
-        Else
-            MsgBox ("Sort first by 'V-grade', 'Date', or 'Location'")
-            Exit Sub
-        End If
-    
-        Dim temp_Var As Variant
-        Dim i As Long
-        
-        ' set new list as the same size and will remove blanks at the end
-        ReDim temp_Var(1 To UBound(current_List), 1 To numCol)
-        
-        ' so my goal is to iterate once through current_list once and make a new variant to store our filtered values O(N)
-        
-        ' add to list if between the two dates
-        For i = 1 To UBound(current_List)
-            ' pass the v-grade as string
-            If start_Date <= current_List(i, 2) And current_List(i, 2) <= end_Date Then
-                temp_Var(i, 1) = current_List(i, 1) ' Column A
-                temp_Var(i, 2) = current_List(i, 2) ' Column B
-                temp_Var(i, 3) = current_List(i, 3) ' Column C
-                temp_Var(i, 4) = current_List(i, 4) ' Column D
-            End If
-        Next i
-        ' remove blanks
-        temp_Var = RemoveBlanks(temp_Var)
-        'remove prior contents
-        output.Rows(startRow & ":" & output.Rows.Count).ClearContents
-        'output filtered list
-        output.Range("A" & startRow).Resize(UBound(temp_Var), numCol).value = temp_Var
-        custom_Sorted = temp_Var
-        MsgBox ("Displaying data from: " & start_Date & " to " & end_Date)
-        
-    End If
-
-End Sub
-Function GetValidDate() As Date
-    Dim userInput As String
-    Dim validDate As Date
-    Dim isValid As Boolean
-
-    ' Initialize flag for validity
-    isValid = False
-    
-    ' Loop until a valid date is entered
-    Do While Not isValid
-        ' Ask the user to enter a date
-        userInput = InputBox("Please enter a valid date (mm/dd/yyyy):")
-        
-        ' Check if the user clicked "Cancel" or closed the InputBox
-        If userInput = "" Then
-            MsgBox "No date entered. Exiting the function.", vbExclamation, "Exit"
-            Exit Function
-        End If
-        
-        ' Check if the input is a valid date
-        If IsDate(userInput) Then
-            validDate = CDate(userInput)  ' Convert to date type
-            isValid = True
-        Else
-            MsgBox "Invalid date entered. Please try again.", vbExclamation, "Invalid Input"
-        End If
-    Loop
-    
-    GetValidDate = validDate
-    
-    ' Display the valid date entered
-    MsgBox "You entered a valid date: " & validDate, vbInformation, "Valid Date"
-End Function
-Sub addDataValidation_Location(loc1 As String, loc2 As String, Optional c_list As Variant)
-    Dim loc_List As String
-    Set output = ActiveWorkbook.Sheets("sort")
-    
-    Dim current_List As Variant
-        ' set current list of recently activated list
-        If Not IsMissing(c_list) Then
-            current_List = c_list
-        ElseIf Not IsEmpty(emoji_Sorted) Then
-            current_List = emoji_Sorted
-        ElseIf Not IsEmpty(var_Sorted) Then
-             current_List = var_Sorted
-        Else
-            MsgBox ("Sort first by 'V-grade', 'Date', or 'Location'")
-            Exit Sub
-        End If
-    
-    Dim temp_Var As Variant
-    Dim i As Long
-    Dim t As Long
-    Dim j As Long
-    t = 1
-    
-    Dim value As String
-    Dim isUnique As Boolean
-    
-    ReDim temp_Var(1 To UBound(current_List), 1 To numCol)
-    ' Iterate through custom_List
-    On Error Resume Next ' To handle errors from attempting to add duplicates
-    For i = LBound(current_List) To UBound(current_List)
-        value = current_List(i, 4)
-        
-        ' Check if the value already exists in unique_List
-        isUnique = True
-        If Not IsEmpty(temp_Var) Then
-            For j = 1 To UBound(temp_Var)
-                If temp_Var(j, 1) = value Then
-                    isUnique = False
-                    Exit For
-                End If
-            Next j
-        End If
-
-        ' Add to unique_List if it is unique
-        If isUnique Then
-            temp_Var(t, 1) = value
-            t = t + 1
-        End If
-    Next i
-    On Error GoTo 0 ' Reset error handling
-    
-    temp_Var = RemoveBlanks(temp_Var)
-    
-    For i = 1 To UBound(temp_Var)
-        loc_List = loc_List & temp_Var(i, 1) & ","
-    Next i
-    
-    ' make F3 empty
-     output.Range(loc1).value = ""
-    ' Add data validation to a specific cell
-    With output.Range(loc1).Validation
-        .Delete ' Remove existing validation
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:=loc_List
-        .IgnoreBlank = True
-        .InCellDropdown = True
-    End With
-    
-    output.Range(loc2).Validation.Delete
-    ' set automatic value to today
-    output.Range(loc2).value = "*blank*"
-    
-    MsgBox ("Please select a Location in cell: " & loc1)
-End Sub
-Sub custom_Location_Sort(loc As String, Optional c_list As Variant)
-    Dim current_List As Variant
-    ' set current list of recently activated list
-    If Not IsMissing(c_list) Then
-        current_List = c_list
-    ElseIf Not IsEmpty(emoji_Sorted) Then
-        current_List = emoji_Sorted
-    ElseIf Not IsEmpty(var_Sorted) Then
-         current_List = var_Sorted
-    Else
-        MsgBox ("Sort first by 'V-grade', 'Date', or 'Location'")
-        Exit Sub
-    End If
-    
-    Dim temp_Var As Variant
-    Dim i As Long
-    
-    ' set new list as the same size and will remove blanks at the end
-    ReDim temp_Var(1 To UBound(current_List), 1 To numCol)
-    
-    ' so my goal is to iterate once through current_list once and make a new variant to store our filtered values O(N)
-    
-    ' add to list if between the two dates
-    For i = 1 To UBound(current_List)
-        ' pass the v-grade as string
-        If loc = current_List(i, 4) Then
-            temp_Var(i, 1) = current_List(i, 1) ' Column A
-            temp_Var(i, 2) = current_List(i, 2) ' Column B
-            temp_Var(i, 3) = current_List(i, 3) ' Column C
-            temp_Var(i, 4) = current_List(i, 4) ' Column D
-        End If
-    Next i
-    ' remove blanks
-    temp_Var = RemoveBlanks(temp_Var)
-    'remove prior contents
-    output.Rows(startRow & ":" & output.Rows.Count).ClearContents
-    'output filtered list
-    output.Range("A" & startRow).Resize(UBound(temp_Var), numCol).value = temp_Var
-    custom_Sorted = temp_Var
-End Sub
